@@ -1,20 +1,20 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import dns from "node:dns";
 
-const connection = async () => {
+dotenv.config();
 
-    await mongoose.connect("mongodb://localhost:27017/FreelancePlatformDB")
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
-        .then(() => {
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
 
-            console.log("DB is Connected Successfully")
+        console.log("MongoDB Atlas Connected Successfully");
+    } catch (error) {
+        console.log("MongoDB Atlas Connection Failed:", error.message);
+        throw error;
+    }
+};
 
-        })
-        .catch((err) => {
-
-            console.log("DB can't connect", err)
-
-            throw err
-        })
-}
-
-export default connection
+export default connectDB;
