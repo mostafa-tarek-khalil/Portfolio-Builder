@@ -1,13 +1,16 @@
-import express from "express"
+import express from "express";
 
 const app = express();
 
-app.use(express.json())
+// Middlewares
+app.use(express.json());
 
-app.get('/',(req,res)=>{
+// Base Route
+app.get("/", (req, res) => {
     res.status(200).json({
-        message:"Base URL"
-    })
-})
+        message: "Welcome to Portfolio API",
+        status: "Success"
+    });
+});
 
-export default app
+export default app;
