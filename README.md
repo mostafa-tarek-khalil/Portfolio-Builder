@@ -1,28 +1,28 @@
-# Freelance_Platform
+# Portfolio Builder
 
-A Freelance Marketplace Platform that connects clients with freelancers, allowing clients to post projects and freelancers to submit proposals, manage project progress, and build their professional reputation through ratings and reviews.
+A Portfolio Builder Platform that helps users create, customize, and showcase their professional portfolios in one place.
 
 ## About The Project
 
-Freelance_Platform is a web-based marketplace designed to connect clients who need services with freelancers who can provide them.
+Portfolify is a web-based platform designed to help individuals build and manage their professional online presence without requiring advanced web development skills.
 
-The platform aims to simplify the freelancing process by providing tools for project publishing, proposal submission, project management, and professional reputation building.
+The platform aims to provide users with an easy way to present their personal information, skills, experience, and projects through a customizable portfolio.
 
 ## Features
 
 ### Authentication & Authorization
 
-### User Profiles
+### Portfolio Management
 
-### Project Management
+### Profile Customization
 
-### Proposals Management
+### Projects Showcase
 
-### Search & Filtering
+### Skills & Experience Management
 
-### Project Progress Tracking
+### Portfolio Templates
 
-### Ratings & Reviews
+### Public Portfolio Sharing
 
 ### Admin Dashboard
 
@@ -45,12 +45,13 @@ The platform aims to simplify the freelancing process by providing tools for pro
 - Git & GitHub
 - Postman
 - MongoDB Atlas
+- MongoDB Compass
 - Visual Studio Code
 
 ## Project Structure
 
 ```text
-Freelance_Platform/
+Portfolio-Builder/
 │
 ├── Backend/
 │   ├── config/
@@ -78,13 +79,13 @@ Freelance_Platform/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/mostafa-tarek-khalil/Freelance_Platform.git
+git clone https://github.com/mostafa-tarek-khalil/Portfolio-Builder.git
 ```
 
 ### 2. Navigate to the Backend Directory
 
 ```bash
-cd Freelance_Platform/Backend
+cd Portfolio-Builder/Backend
 ```
 
 ### 3. Install Dependencies
