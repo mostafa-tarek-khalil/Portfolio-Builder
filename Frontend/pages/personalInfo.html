@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FolioCraft | Personal Info</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/personalInfo.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="Home.html" class="logo">
+      <span class="logo-icon">⚡</span>
+      <div><div class="logo-name">Folio<span>Craft</span></div><div class="logo-sub">PORTFOLIO ENGINE</div></div>
+    </a>
+    <div class="nav-user">
+      <a class="btn btn-dark" href="edit.html">Edit Portfolio</a>
+    </div>
+  </header>
+
+  <main class="dash">
+
+    <section class="page-head">
+      <h1>Personal Info</h1>
+      <p>Your details as they appear in every template, plus all the portfolios you saved.</p>
+    </section>
+
+    <!-- 1) Profile -->
+    <section class="panel">
+      <h2 class="panel-title"><span class="num">1</span> Profile</h2>
+      <div class="profile">
+        <div class="photo-preview" id="photoPreview"></div>
+        <div>
+          <small class="kv-label">Full Name</small>
+          <h3 class="profile-name" id="profileName"></h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) Portfolio information -->
+    <section class="panel">
+      <h2 class="panel-title"><span class="num">2</span> Portfolio Information <small>Everything here appears in your portfolio</small></h2>
+      <div id="infoForm"></div>
+    </section>
+
+    <!-- 3) Saved portfolios -->
+    <section class="panel">
+      <div class="section-head">
+        <h2 class="panel-title"><span class="num">3</span> Saved Portfolios <span class="count" id="savedCount">0</span></h2>
+        <a class="add-new" href="chooseTemplate.html"><i>+</i> Add New</a>
+      </div>
+      <div class="saved-grid" id="savedGrid"></div>
+    </section>
+  </main>
+
+  <!-- Full screen viewer for a saved portfolio -->
+  <div class="fs" id="fs" hidden>
+    <div class="fs-bar">
+      <div><b id="fsTitle"></b> <span id="fsSub"></span></div>
+      <button class="btn btn-dark" id="fsClose" type="button">✕ Close</button>
+    </div>
+    <iframe id="fsFrame" title="Saved portfolio"></iframe>
+  </div>
+
+  <!-- SweetAlert-style confirmation -->
+  <div class="swal" id="swal" hidden>
+    <div class="swal-box" role="alertdialog" aria-modal="true" aria-labelledby="swalTitle">
+      <div class="swal-icon warn" id="swalIcon">!</div>
+      <h3 id="swalTitle"></h3>
+      <p id="swalText"></p>
+      <div class="swal-actions" id="swalActions">
+        <button class="btn btn-dark" id="swalCancel" type="button">Cancel</button>
+        <button class="btn swal-danger" id="swalOk" type="button">Yes, delete it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="../js/personalInfo.js"></script>
+</body>
+</html>

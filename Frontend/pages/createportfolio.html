@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FolioCraft - Create Portfolio</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    />
+    <link rel="stylesheet" href="../css/createportfolio.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+
+    <nav class="nav">
+      <a href="./Home.html" class="logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="logo-name">Folio <span>Craft</span></div>
+          <div class="logo-sub">PORTFOLIO ENGINE</div>
+        </div>
+      </a>
+      <div class="nav-right">
+        <!-- <a href="./edit.html" class="signin btn-outline btn" id="btn-preview"
+          >Preview</a
+        > -->
+        <a href="./personalInfo.html" class="btn btn-primary" id="btn-publish"
+          >Go To Your Page</a
+        >
+      </div>
+    </nav>
+
+    <main class="wrapper">
+      <div class="stepper">
+        <div class="progress">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="steps">
+          <button type="button" class="step active" data-step="1">
+            <b>1</b>Personal
+          </button>
+          <button type="button" class="step" data-step="2">
+            <b>2</b>Skills
+          </button>
+          <button type="button" class="step" data-step="3">
+            <b>3</b>Experience
+          </button>
+          <button type="button" class="step" data-step="4">
+            <b>4</b>Projects
+          </button>
+          <button type="button" class="step" data-step="5">
+            <b>5</b>Socials
+          </button>
+          <!-- <button type="button" class="step" data-step="6">
+            <b>6</b>Template
+          </button> -->
+        </div>
+      </div>
+
+      <div class="card">
+        <!-- Personal Stage -->
+        <section class="panel active" data-step="1">
+          <h2>Personal Information</h2>
+          <p class="desc">
+            Enter your main profile details to introduce yourself on your
+            portfolio.
+          </p>
+          <div class="photo-row">
+            <div class="avatar" id="avatar"></div>
+            <div>
+              <label>Profile Photo</label>
+              <label class="upload-btn">
+                Upload Photo
+                <input type="file" id="photo-input" accept="image/*" hidden />
+              </label>
+              <div class="hint">Square image recommended (Max 2MB).</div>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Full Name *</label
+              ><input
+                type="text"
+                id="full-name"
+                placeholder="Full Name"
+                required
+              />
+            </div>
+            <div class="field">
+              <label>Professional Title *</label
+              ><input
+                type="text"
+                placeholder="Professional Title"
+                required
+                id="title"
+              />
+            </div>
+            <div class="field">
+              <label>Email Address *</label
+              ><input
+                type="email"
+                placeholder="Your Mail@example.com"
+                required
+                id="email"
+              />
+            </div>
+            <div class="field">
+              <label>Phone Number *</label
+              ><input
+                type="text"
+                placeholder="+20 Phone Number"
+                required
+                id="phone"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label>Location</label
+            ><input type="text" placeholder="City Street Home" id="location" />
+          </div>
+          <div class="field">
+            <label>Short Bio *</label>
+            <textarea
+              rows="3"
+              id="bio"
+              placeholder="Passionate product designer and frontend developer with 5+ years of experience building scalable design systems and intuitive web applications for tech startups."
+            ></textarea>
+          </div>
+
+          <div class="nav-btns">
+            <span></span>
+            <button type="button" class="btn primary" data-go="next">
+              Next Step
+            </button>
+          </div>
+        </section>
+
+        <!-- Skills Stage -->
+        <section class="panel" data-step="2">
+          <h2>&lt;/&gt; Skills &amp; Technologies</h2>
+          <p class="desc">
+            Add your technical and creative skills to display on your portfolio.
+          </p>
+          <div class="skill-input">
+            <input
+              type="text"
+              id="skill-input"
+              placeholder="Type a skill (e.g., React, Figma, Python...) and press Add"
+            />
+            <button type="button" class="btn primary" id="add-skill">
+              + Add
+            </button>
+          </div>
+          <div class="added-label">Added Skills:</div>
+          <div class="chips" id="chips"></div>
+          <div class="nav-btns">
+            <button type="button" class="btn ghost" data-go="prev">
+              Previous Step
+            </button>
+            <button type="button" class="btn primary" data-go="next">
+              Next Step
+            </button>
+          </div>
+        </section>
+
+        <!-- Experience Stage -->
+        <section class="panel" data-step="3">
+          <h2>Experience &amp; Education</h2>
+          <p class="desc">
+            Detail your work history and academic qualifications.
+          </p>
+
+          <div class="section-head">
+            <h3>Work Experience</h3>
+            <button type="button" class="link-btn" id="add-position">
+              Add Position
+            </button>
+          </div>
+
+          <div id="positions" data-label="Position">
+            <!-- Position 1 -->
+            <div class="item">
+              <div class="item-top">
+                <span class="item-title">Position #1</span>
+                <button type="button" class="remove">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <div class="row3">
+                <input type="text" placeholder="Job Title" />
+                <input type="text" placeholder="Company" />
+                <input type="text" placeholder="2022 - Present" />
+              </div>
+              <textarea
+                rows="2"
+                placeholder="Describe your role and achievements..."
+              ></textarea>
+            </div>
+
+            <!-- Position 2 -->
+            <div class="item">
+              <div class="item-top">
+                <span class="item-title">Position #2</span>
+                <button type="button" class="remove">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <div class="row3">
+                <input type="text" placeholder="Job Title" />
+                <input type="text" placeholder="Company" />
+                <input type="text" placeholder="2020 - 2022" />
+              </div>
+              <textarea
+                rows="2"
+                placeholder="Describe your role and achievements..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <h3>Education</h3>
+            <button type="button" class="link-btn" id="add-edu">
+              Add Education
+            </button>
+          </div>
+
+          <div id="education">
+            <!-- Education 1 -->
+            <div class="edu-row">
+              <input type="text" placeholder="Degree" />
+              <input type="text" placeholder="University" />
+              <input type="text" placeholder="2016 - 2020" />
+              <button type="button" class="remove">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button type="button" class="btn ghost" data-go="prev">
+              Previous Step
+            </button>
+            <button type="button" class="btn primary" data-go="next">
+              Next Step
+            </button>
+          </div>
+        </section>
+
+        <!-- Projects Stage -->
+        <section class="panel" data-step="4">
+          <div class="section-head top">
+            <div>
+              <h2>Featured Projects</h2>
+              <p class="desc">
+                Showcase your best projects with descriptions and links.
+              </p>
+            </div>
+            <button type="button" class="link-btn boxed" id="add-project">
+              Add Project
+            </button>
+          </div>
+
+          <div id="projects" data-label="Project">
+            <!-- Project 1 -->
+            <div class="item">
+              <div class="item-top">
+                <span class="item-title">Project #1</span>
+                <button type="button" class="remove">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <input type="text" placeholder="Project Name" />
+              <textarea
+                rows="2"
+                placeholder="Describe your project..."
+              ></textarea>
+              <div class="row2">
+                <input type="text" placeholder="GitHub link" />
+                <input type="text" placeholder="Live demo link" />
+              </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="item">
+              <div class="item-top">
+                <span class="item-title">Project #2</span>
+                <button type="button" class="remove">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <input type="text" placeholder="Project Name" />
+              <textarea
+                rows="2"
+                placeholder="Describe your project..."
+              ></textarea>
+              <div class="row2">
+                <input type="text" placeholder="GitHub link" />
+                <input type="text" placeholder="Live demo link" />
+              </div>
+            </div>
+          </div>
+          <div class="nav-btns">
+            <button type="button" class="btn ghost" data-go="prev">
+              Previous Step
+            </button>
+            <button type="button" class="btn primary" data-go="next">
+              Next Step
+            </button>
+          </div>
+        </section>
+
+        <!-- Socials Stage -->
+        <section class="panel" data-step="5">
+          <h2>Social &amp; Contact Links</h2>
+          <p class="desc">
+            Add your social profiles so recruiters and clients can connect with
+            you.
+          </p>
+          <div class="grid2">
+            <div class="field">
+              <label
+                ><i class="fa-brands fa-linkedin"></i> LinkedIn Profile</label
+              ><input
+                type="text"
+                id="linkedin"
+                placeholder="https://linkedin.com/in/username"
+              />
+            </div>
+            <div class="field">
+              <label><i class="fa-brands fa-github"></i> GitHub Profile</label
+              ><input
+                type="text"
+                id="github"
+                placeholder="https://github.com/username"
+              />
+            </div>
+            <!-- <div class="field"><label><i class="fa-brands fa-square-twitter"></i>  Twitter / X Profile</label><input type="text" placeholder="https://x.com/username"></div> -->
+            <div class="field">
+              <label
+                ><i class="fa-solid fa-person"></i> Personal Website /
+                Blog</label
+              ><input
+                type="text"
+                id="website"
+                placeholder="https://yourwebsite.com"
+              />
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button type="button" class="btn ghost" data-go="prev">
+              Previous Step
+            </button>
+            <button type="button" class="btn primary" id="finish">
+              Go To Your Page
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="../js/createportfolio.js"></script>
+  </body>
+</html>
