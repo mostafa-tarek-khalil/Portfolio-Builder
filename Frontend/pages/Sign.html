@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FolioCraft - Sign In</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="../css/Sign.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- nav -->
+    <nav class="nav">
+      <a href="./Home.html" class="logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="logo-name">Folio <span>Craft</span></div>
+          <div class="logo-sub">PORTFOLIO ENGINE</div>
+        </div>
+      </a>
+      <div class="nav-right">
+        <!-- <a href="./Sign.html" class="signin btn-outline btn">Sign In</a> -->
+        <a href="./Home.html" class="btn btn-primary">Back To Home</a>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Left Side -->
+      <section class="left">
+        <div class="badge">FolioCraft Auth v2.0 • Unified Access</div>
+        <h1>
+          Build Your Dream Portfolio
+          <span class="gradient-text">In Less Than 3 Minutes.</span>
+        </h1>
+        <p class="intro">
+          Join over 10,000+ software engineers, UI/UX designers, and tech
+          professionals showcasing their work with live shareable links.
+        </p>
+        <ul class="features">
+          <li>
+            <span class="check">✓</span> 30+ Handcrafted Designer Templates
+          </li>
+          <li>
+            <span class="check">✓</span> Custom Handle
+            (<code>foliocraft.me/you</code>) &amp; Instant Hosting
+          </li>
+          <li>
+            <span class="check purple">✓</span> GitHub Sync &amp; One-Click Live
+            Production Badges
+          </li>
+        </ul>
+        <div class="review">
+          <div class="review-top">
+            <div class="avatar">SJ</div>
+            <div>
+              <div class="review-name">Sarah Jenkins</div>
+              <div class="review-job">Senior Product Designer</div>
+            </div>
+            <span class="verified">Verified Creator</span>
+          </div>
+          <p class="review-text">
+            "FolioCraft helped me land my Senior UX Designer role at TechCorp in
+            less than 2 weeks! The recruiter loved the clean layout."
+          </p>
+          <div class="review-bottom">
+            <span class="stars">★★★★★</span> 4.9/5 Rating from 2,400+ Recruiters
+          </div>
+        </div>
+      </section>
+      <!-- Right Side -->
+      <section class="right">
+        <div class="card">
+          <div class="tabs">
+            <button class="tab active" id="tab-signin" type="button">
+              Sign In
+            </button>
+            <button class="tab" id="tab-signup" type="button">
+              Create Account
+            </button>
+          </div>
+          <div class="social">
+            <button type="button" class="social-btn">
+              <b class="g"><i class="fa-brands fa-google"></i></b> Google
+            </button>
+            <button type="button" class="social-btn">
+              <b class="g"><i class="fa-brands fa-github"></i></b> GitHub
+            </button>
+          </div>
+          <div class="divider"><span>OR CONTINUE WITH EMAIL</span></div>
+          <!-- Form -->
+          <form id="auth-form">
+            <div class="field hidden" id="name-field">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Alex Morgan" />
+            </div>
+
+            <div class="field">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="alex@company.com"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <label for="password">Password</label>
+                <a href="#" id="forgot">Forgot password?</a>
+              </div>
+              <div class="password-box">
+                <input type="password" id="password" required />
+                <button
+                  type="button"
+                  id="toggle-eye"
+                  class="eye"
+                  aria-label="Show password"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <label class="remember">
+              <input type="checkbox" /> Remember me for 30 days
+            </label>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+              Sign In
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <!-- Forget Password-->
+    <div class="modal" id="forgot-modal">
+      <div class="modal-box">
+        <button type="button" class="modal-close" id="modal-close">×</button>
+        <h3>Reset your password</h3>
+        <p>Enter your email, and choose a new one.</p>
+
+        <form id="forgot-form">
+          <input
+            type="email"
+            id="reset-email"
+            placeholder="Email Address"
+            required
+          />
+          <input
+            type="password"
+            id="new-password"
+            placeholder="New Password"
+            required
+          />
+          <button type="submit" class="submit-btn">Change Password</button>
+        </form>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+      <span>© 2026 FolioCraft Platform Inc. All rights reserved.</span>
+      <nav>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+      </nav>
+    </footer>
+    <script src="../js/Sign.js"></script>
+  </body>
+</html>
