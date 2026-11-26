@@ -30,17 +30,46 @@ function showStep(n) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function validateStep(stepNumber) {
+  const currentPanel = document.querySelector(
+    `.panel[data-step="${stepNumber}"]`
+  );
+
+  const requiredInputs = currentPanel.querySelectorAll("[required]");
+
+  for (let input of requiredInputs) {
+    if (!input.checkValidity()) {
+      input.reportValidity();
+      return false;
+    }
+  }
+
+  return true;
+}
+
 stepBtns.forEach(function (b) {
   b.addEventListener("click", function () {
-    showStep(Number(b.dataset.step));
+    const targetStep = Number(b.dataset.step);
+
+    if (targetStep > currentStep) {
+      if (!validateStep(currentStep)) return;
+    }
+
+    showStep(targetStep);
   });
 });
 
 document.querySelectorAll("[data-go]").forEach(function (btn) {
   btn.addEventListener("click", function () {
-    if (btn.dataset.go === "next" && currentStep < totalSteps)
+    if (btn.dataset.go === "next" && currentStep < totalSteps) {
+      if (!validateStep(currentStep)) return;
+
       showStep(currentStep + 1);
-    if (btn.dataset.go === "prev" && currentStep > 1) showStep(currentStep - 1);
+    }
+
+    if (btn.dataset.go === "prev" && currentStep > 1) {
+      showStep(currentStep - 1);
+    }
   });
 });
 
@@ -209,25 +238,29 @@ document.addEventListener("click", function (e) {
 
 function val(id) { return document.getElementById(id).value.trim(); }
 function toPortfolioShape(d) {
-  const p=d.personal||{}, c=d.socials||{};
-  return {templateId:d.templateId||1,published:true,available:true,name:p.name||"",jobTitle:p.title||"",location:p.location||"",about:p.bio||"",photo:p.photo||"",
-    skills:d.skills||[],experience:(d.positions||[]).map(x=>({role:x.job,company:x.company,period:x.years,description:x.desc})),
-    education:(d.education||[]).map(x=>({degree:x.degree,school:x.school,period:x.years})),
-    projects:(d.projects||[]).map(x=>({title:x.name,description:x.desc,github:x.github,demo:x.demo})),
-    contact:{email:p.email||"",phone:p.phone||"",linkedin:c.linkedin||"",github:c.github||"",website:c.website||""}};
+  const p = d.personal || {}, c = d.socials || {};
+  return {
+    templateId: d.templateId || 1, published: true, available: true, name: p.name || "", jobTitle: p.title || "", location: p.location || "", about: p.bio || "", photo: p.photo || "",
+    skills: d.skills || [], experience: (d.positions || []).map(x => ({ role: x.job, company: x.company, period: x.years, description: x.desc })),
+    education: (d.education || []).map(x => ({ degree: x.degree, school: x.school, period: x.years })),
+    projects: (d.projects || []).map(x => ({ title: x.name, description: x.desc, github: x.github, demo: x.demo })),
+    contact: { email: p.email || "", phone: p.phone || "", linkedin: c.linkedin || "", github: c.github || "", website: c.website || "" }
+  };
 }
 function savePortfolio() {
-  const required=["full-name","title","email","phone","bio"];
+  const required = ["full-name", "title", "email", "phone", "bio"];
   for (const id of required) if (!val(id)) { showStep(1); document.getElementById(id).focus(); alert("Please fill in all required fields."); return false; }
-  const data={personal:{name:val("full-name"),title:val("title"),email:val("email"),phone:val("phone"),location:val("location"),bio:val("bio"),photo:photoData},
-    skills,positions:[],education:[],projects:[],socials:{linkedin:val("linkedin"),github:val("github"),website:val("website")},templateId:1,published:true};
-  document.querySelectorAll("#positions .item").forEach(box=>{const a=box.querySelectorAll("input");if(a[0].value.trim()||a[1].value.trim())data.positions.push({job:a[0].value.trim(),company:a[1].value.trim(),years:a[2].value.trim(),desc:box.querySelector("textarea").value.trim()});});
-  document.querySelectorAll("#education .edu-row").forEach(row=>{const a=row.querySelectorAll("input");if(a[0].value.trim()||a[1].value.trim())data.education.push({degree:a[0].value.trim(),school:a[1].value.trim(),years:a[2].value.trim()});});
-  document.querySelectorAll("#projects .item").forEach(box=>{const a=box.querySelectorAll("input");if(a[0].value.trim())data.projects.push({name:a[0].value.trim(),github:a[1].value.trim(),demo:a[2].value.trim(),desc:box.querySelector("textarea").value.trim()});});
-  try { localStorage.setItem(storageKey,JSON.stringify(data)); localStorage.setItem("portfolioData",JSON.stringify(toPortfolioShape(data))); }
-  catch(err){alert("Could not save. Try a smaller photo.");return false;}
+  const data = {
+    personal: { name: val("full-name"), title: val("title"), email: val("email"), phone: val("phone"), location: val("location"), bio: val("bio"), photo: photoData },
+    skills, positions: [], education: [], projects: [], socials: { linkedin: val("linkedin"), github: val("github"), website: val("website") }, templateId: 1, published: true
+  };
+  document.querySelectorAll("#positions .item").forEach(box => { const a = box.querySelectorAll("input"); if (a[0].value.trim() || a[1].value.trim()) data.positions.push({ job: a[0].value.trim(), company: a[1].value.trim(), years: a[2].value.trim(), desc: box.querySelector("textarea").value.trim() }); });
+  document.querySelectorAll("#education .edu-row").forEach(row => { const a = row.querySelectorAll("input"); if (a[0].value.trim() || a[1].value.trim()) data.education.push({ degree: a[0].value.trim(), school: a[1].value.trim(), years: a[2].value.trim() }); });
+  document.querySelectorAll("#projects .item").forEach(box => { const a = box.querySelectorAll("input"); if (a[0].value.trim()) data.projects.push({ name: a[0].value.trim(), github: a[1].value.trim(), demo: a[2].value.trim(), desc: box.querySelector("textarea").value.trim() }); });
+  try { localStorage.setItem(storageKey, JSON.stringify(data)); localStorage.setItem("portfolioData", JSON.stringify(toPortfolioShape(data))); }
+  catch (err) { alert("Could not save. Try a smaller photo."); return false; }
   return true;
 }
-function finish(e){e.preventDefault();if(savePortfolio())location.href="personalInfo.html";}
-document.getElementById("btn-publish")?.addEventListener("click",finish);
-document.getElementById("finish")?.addEventListener("click",finish);
+function finish(e) { e.preventDefault(); if (savePortfolio()) location.href = "personalInfo.html"; }
+document.getElementById("btn-publish")?.addEventListener("click", finish);
+document.getElementById("finish")?.addEventListener("click", finish);

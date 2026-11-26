@@ -1,71 +1,174 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070a12">
   <title>FolioCraft | Personal Info</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../css/personalInfo.css">
+  <link rel="stylesheet" href="../css/fx.css">
 </head>
-<body>
 
+<body>
   <header class="navbar">
     <a href="Home.html" class="logo">
-      <span class="logo-icon">⚡</span>
-      <div><div class="logo-name">Folio<span>Craft</span></div><div class="logo-sub">PORTFOLIO ENGINE</div></div>
+      <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="logo-name">Folio<span>Craft</span></div>
+        <div class="logo-sub">PORTFOLIO ENGINE</div>
+      </div>
     </a>
+    <nav class="nav-links">
+      <a href="personalInfo.html" class="active">Dashboard</a>
+      <a href="allInfo.html">All Information</a>
+      <a href="edit.html">Edit Portfolio</a>
+      <a href="chooseTemplate.html">New Portfolio</a>
+    </nav>
     <div class="nav-user">
-      <a class="btn btn-dark" href="edit.html">Edit Portfolio</a>
+      <div class="nav-avatar" id="navAvatar">?</div>
+      <div class="nav-user-info">
+        <span id="navUserName">Loading…</span>
+        <small id="navUserEmail"></small>
+      </div>
+      <button class="nav-logout" id="navLogout" type="button" title="Sign out">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
     </div>
   </header>
 
   <main class="dash">
-
     <section class="page-head">
-      <h1>Personal Info</h1>
-      <p>Your details as they appear in every template, plus all the portfolios you saved.</p>
+      <div>
+        <span class="page-eyebrow">YOUR WORKSPACE</span>
+        <h1>Personal Info</h1>
+        <p>Manage your profile, track your progress, and keep your portfolios organized.</p>
+      </div>
+      <a class="btn btn-purple page-edit" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Profile <span>↗</span></a>
     </section>
 
-    <!-- 1) Profile -->
-    <section class="panel">
-      <h2 class="panel-title"><span class="num">1</span> Profile</h2>
+    <!-- 1) Profile overview -->
+    <section class="panel profile-panel">
+      <div class="section-heading">
+        <h2 class="panel-title"><span class="num">1</span> Profile Overview</h2>
+        <span class="status-pill"><i></i><span id="profileStatus">Published</span></span>
+      </div>
+
       <div class="profile">
         <div class="photo-preview" id="photoPreview"></div>
-        <div>
-          <small class="kv-label">Full Name</small>
+        <div class="profile-details">
+          <span class="kv-label">WELCOME BACK</span>
           <h3 class="profile-name" id="profileName"></h3>
+          <p class="profile-role" id="profileJobTitle"></p>
+          <div class="profile-meta">
+            <span><b>⌖</b> <span id="profileLocation"></span></span>
+            <span><b>✉</b> <span id="profileEmail"></span></span>
+          </div>
+        </div>
+        <div class="member-since">
+        <div class="member-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          <div>
+            <span>MEMBER SINCE</span>
+            <strong id="memberSince">—</strong>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Portfolio statistics -->
+    <section class="stats-grid" aria-label="Portfolio statistics">
+      <article class="stat-card stat-violet">
+        <div class="stat-top"><span class="stat-icon"><i class="fa-solid fa-code"></i></span><span class="stat-label">SKILLS</span></div>
+        <strong id="statSkills">0</strong>
+        <p>Added skills</p>
+      </article>
+      <article class="stat-card stat-blue">
+        <div class="stat-top"><span class="stat-icon"><i class="fa-solid fa-layer-group"></i></span><span class="stat-label">PROJECTS</span></div>
+        <strong id="statProjects">0</strong>
+        <p>Showcase projects</p>
+      </article>
+      <article class="stat-card stat-green">
+        <div class="stat-top"><span class="stat-icon"><i class="fa-solid fa-briefcase"></i></span><span class="stat-label">EXPERIENCE</span></div>
+        <strong id="statExperience">0</strong>
+        <p>Work experiences</p>
+      </article>
+      <article class="stat-card stat-gold">
+        <div class="stat-top"><span class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></span><span class="stat-label">EDUCATION</span></div>
+        <strong id="statEducation">0</strong>
+        <p>Education records</p>
+      </article>
+    </section>
+
+    <!-- Profile completion -->
+    <section class="panel completion-panel">
+      <div class="completion-main">
+        <div class="completion-heading">
+          <div>
+            <span class="block-kicker">PROFILE HEALTH</span>
+            <h2>Complete Your Profile</h2>
+            <p id="completionText">Complete your information to strengthen your portfolio.</p>
+          </div>
+          <strong id="completionPercent">0%</strong>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Profile completion" aria-valuemin="0"
+          aria-valuemax="100" aria-valuenow="0">
+          <span id="completionBar"></span>
+        </div>
+      </div>
+      <div class="completion-list" id="completionList"></div>
+    </section>
+
     <!-- 2) Portfolio information -->
     <section class="panel">
-      <h2 class="panel-title"><span class="num">2</span> Portfolio Information <small>Everything here appears in your portfolio</small></h2>
+      <div class="section-head">
+        <div>
+          <h2 class="panel-title"><span class="num">2</span> Portfolio Information</h2>
+          <p class="section-description">A quick look at the details used across your portfolio templates.</p>
+        </div>
+        <div class="head-actions">
+          <a class="btn btn-dark" href="allInfo.html"><i class="fa-solid fa-table-list"></i> All Information</a>
+          <a class="btn btn-dark" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Portfolio</a>
+        </div>
+      </div>
       <div id="infoForm"></div>
     </section>
 
     <!-- 3) Saved portfolios -->
     <section class="panel">
       <div class="section-head">
-        <h2 class="panel-title"><span class="num">3</span> Saved Portfolios <span class="count" id="savedCount">0</span></h2>
-        <a class="add-new" href="chooseTemplate.html"><i>+</i> Add New</a>
+        <div>
+          <h2 class="panel-title">
+            <span class="num">3</span> Saved Portfolios
+            <span class="count" id="savedCount">0</span>
+          </h2>
+          <p class="section-description">Your saved designs, ready to preview or manage.</p>
+        </div>
+        <a class="add-new" href="chooseTemplate.html">
+          <i class="plus-icon"></i>
+          Add New
+        </a>
       </div>
       <div class="saved-grid" id="savedGrid"></div>
     </section>
   </main>
 
-  <!-- Full screen viewer for a saved portfolio -->
+  <!-- Full screen viewer -->
   <div class="fs" id="fs" hidden>
     <div class="fs-bar">
       <div><b id="fsTitle"></b> <span id="fsSub"></span></div>
-      <button class="btn btn-dark" id="fsClose" type="button">✕ Close</button>
+      <button class="btn btn-dark" id="fsClose" type="button"><i class="fa-solid fa-xmark"></i> Close</button>
     </div>
     <iframe id="fsFrame" title="Saved portfolio"></iframe>
   </div>
 
-  <!-- SweetAlert-style confirmation -->
+  <!-- Delete confirmation -->
   <div class="swal" id="swal" hidden>
     <div class="swal-box" role="alertdialog" aria-modal="true" aria-labelledby="swalTitle">
       <div class="swal-icon warn" id="swalIcon">!</div>
@@ -78,8 +181,8 @@
     </div>
   </div>
 
-  <div class="toast" id="toast" hidden></div>
-
   <script src="../js/personalInfo.js"></script>
+    <script src="../js/fx.js"></script>
 </body>
+
 </html>

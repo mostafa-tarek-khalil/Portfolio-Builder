@@ -13,12 +13,13 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
     <link rel="stylesheet" href="../css/edit.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
   </head>
   <body>
     <!-- Navbar -->
     <nav class="nav">
       <a href="./Home.html" class="logo">
-        <div class="logo-icon">⚡</div>
+        <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
         <div>
           <div class="logo-name">Folio <span>Craft</span></div>
           <div class="logo-sub">PORTFOLIO ENGINE</div>
@@ -52,11 +53,19 @@
             <div class="avatar" id="avatar"></div>
             <div>
               <label>Profile Photo</label>
-              <label class="upload-btn"
-                >Change Photo
-                <input type="file" id="photo-input" accept="image/*" hidden />
-              </label>
-              <div class="hint">Square image recommended (Max 2MB).</div>
+              <div class="photo-actions" style="display:flex; gap:10px; margin-top:12px;">
+                <button type="button" class="upload-btn" id="edit-crop-btn">
+                  <i class="fa-solid fa-crop-simple"></i> Crop Photo
+                </button>
+                <label class="upload-btn"
+                  ><i class="fa-solid fa-upload"></i> Upload Photo
+                  <input type="file" id="photo-crop-input" accept="image/*" hidden />
+                </label>
+                <button type="button" class="upload-btn remove-photo-btn" id="remove-photo">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+              <div class="hint" style="margin-top: 15px;">Square image recommended (Max 2MB). Crop Photo opens your saved image for re-cropping.</div>
             </div>
           </div>
 
@@ -347,8 +356,25 @@
       </form>
     </main>
 
+    <!-- Crop modal -->
+    <div class="crop-modal" id="crop-modal">
+      <div class="crop-box">
+        <h3>Crop your photo</h3>
+        <div class="crop-stage" id="crop-stage">
+          <img id="crop-img" alt="Crop preview" />
+        </div>
+        <p class="crop-hint">Drag to move • Use the slider to zoom</p>
+        <input type="range" id="crop-zoom" min="0.5" max="3" step="0.01" value="1" />
+        <div class="crop-actions">
+          <button type="button" class="btn btn-outline" id="crop-cancel" style="color: #fff;">Cancel</button>
+          <button type="button" class="btn btn-primary" id="crop-apply">Apply Crop</button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script src="../js/edit.js"></script>
+    <script src="../js/fx.js"></script>
   </body>
 </html>

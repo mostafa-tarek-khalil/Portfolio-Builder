@@ -1,3 +1,0 @@
-/*
-    This file is for writing the endpoint then splitting the code and distributing it into files across folders
-*/

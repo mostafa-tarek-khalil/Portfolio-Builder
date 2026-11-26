@@ -94,9 +94,10 @@ section[id] {
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  background: rgba(8, 12, 24, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border);
+  background: rgba(8, 12, 24, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
 }
 
@@ -517,6 +518,72 @@ textarea::placeholder {
   opacity: 1;
   transform: translate(-50%, 0);
 }
+
+/* ================= Photo actions ================= */
+.photo-actions .upload-btn {
+  margin-bottom: 0;
+}
+.remove-photo-btn {
+  color: #fda4af;
+  background: color-mix(in srgb, #ef4444 18%, transparent);
+  border-color: color-mix(in srgb, #ef4444 50%, transparent);
+}
+.remove-photo-btn:hover {
+  background: color-mix(in srgb, #ef4444 30%, transparent);
+}
+
+/* ================= Crop modal ================= */
+.crop-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 4, 10, .85);
+  backdrop-filter: blur(6px);
+}
+.crop-modal.open { display: flex; }
+.crop-box {
+  width: min(92vw, 480px);
+  padding: 26px 24px;
+  background: linear-gradient(180deg, #0c1224, #080d1a);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.6);
+  text-align: center;
+  animation: cropPop .3s cubic-bezier(.2,1.2,.4,1);
+}
+@keyframes cropPop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.crop-box h3 { margin-bottom: 16px; font-size: 18px; }
+.crop-stage {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 14px;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  background: #05070d;
+  box-shadow: 0 0 0 100vmax rgba(2,4,10,.45);
+  clip-path: inset(0);
+}
+.crop-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
+  transition: transform .06s linear;
+}
+.crop-hint { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.crop-box input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  margin-bottom: 18px;
+}
+.crop-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 /* Responsive */
 @media (max-width: 800px) {

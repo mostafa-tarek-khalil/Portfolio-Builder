@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FolioCraft - All Information</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/allInfo.css" />
+    <link rel="stylesheet" href="../css/fx.css" />
+</head>
+
+<body>
+  <!-- Nav -->
+  <header class="navbar">
+    <a href="Home.html" class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-bolt"></i></span>
+      <div>
+        <div class="logo-name">Folio<span>Craft</span></div>
+        <div class="logo-sub">PORTFOLIO ENGINE</div>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <a class="btn btn-outline" href="personalInfo.html"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+      <a class="btn btn-purple" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Data</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-head">
+      <div>
+        <span class="eyebrow">FULL SNAPSHOT</span>
+        <h1>All Information</h1>
+        <p>
+          Every piece of data stored in your portfolio — personal details,
+          contact links, skills, experience, education and projects.
+        </p>
+      </div>
+      <button class="btn btn-purple print-btn" id="printBtn" type="button">
+        <i class="fa-solid fa-print"></i> Print / Export PDF
+      </button>
+    </section>
+
+    <!-- Personal -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-user"></i></span> Personal Information</h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="profile-hero">
+        <div class="photo" id="aiPhoto"></div>
+        <div class="hero-meta">
+          <h3 id="aiName">—</h3>
+          <p id="aiTitle" class="role">—</p>
+          <div class="meta-row">
+            <span><b>⌖</b> <span id="aiLocation">—</span></span>
+            <span><b>✉</b> <span id="aiEmail">—</span></span>
+            <span><b>✆</b> <span id="aiPhone">—</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="bio-box">
+        <span class="kicker">ABOUT ME</span>
+        <p id="aiBio">—</p>
+      </div>
+    </section>
+
+    <!-- Social links -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-link"></i></span> Social &amp; Contact Links</h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="link-grid" id="aiLinks"></div>
+    </section>
+
+    <!-- Skills -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-code"></i></span> Skills &amp; Technologies
+          <span class="count" id="aiSkillsCount">0</span>
+        </h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="chips" id="aiSkills"></div>
+    </section>
+
+    <!-- Experience -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-briefcase"></i></span> Work Experience
+          <span class="count" id="aiExpCount">0</span>
+        </h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="timeline" id="aiExperience"></div>
+    </section>
+
+    <!-- Education -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-graduation-cap"></i></span> Education
+          <span class="count" id="aiEduCount">0</span>
+        </h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="timeline" id="aiEducation"></div>
+    </section>
+
+    <!-- Projects -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2><span class="num"><i class="fa-solid fa-rocket"></i></span> Featured Projects
+          <span class="count" id="aiProjCount">0</span>
+        </h2>
+        <a class="mini-link" href="edit.html">Edit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+      <div class="proj-grid" id="aiProjects"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 FolioCraft • All information view</span>
+    <span id="aiSavedAt"></span>
+  </footer>
+
+  <script src="../js/allInfo.js"></script>
+    <script src="../js/fx.js"></script>
+</body>
+
+</html>

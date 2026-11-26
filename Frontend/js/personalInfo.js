@@ -1,155 +1,323 @@
-// ================= Keys & data (read only) =================
-const DATA_KEY = "portfolioData";      // written by your editor page, read here and by portfolio.js
-const SAVED_KEY = "savedPortfolios";   // snapshots created with the Save button on the portfolio page
-const TEMPLATE_NAMES = { 1: "Minimal Mono Canvas", 2: "Modern Tech Stack", 3: "Creative Studio Grid", 4: "Executive Lead Suite" };
+// ================= Keys & data =================
+const DATA_KEY = "portfolioData";
+const SAVED_KEY = "savedPortfolios";
 
-// Shown only when your editor hasn't saved any data yet
-const demoData = {
-  name: "Sarah Jenkins", jobTitle: "Senior UI/UX Designer & Frontend Developer", location: "San Francisco, CA",
-  about: "Passionate product designer and frontend developer with 5+ years of experience building scalable design systems, elegant web applications, and intuitive user experiences for high-growth tech startups.",
-  photo: "",
-  skills: ["Figma", "UI/UX Design", "Tailwind CSS", "React.js", "TypeScript", "Node.js", "Design Systems"],
-  education: [{ school: "Stanford University", degree: "B.S. in Computer Science", period: "2016 - 2020" }],
-  experience: [
-    { company: "TechCorp Solutions", role: "Senior Product Designer", period: "2022 - Present", description: "Leading design systems and user research for enterprise SaaS applications reaching over 500k monthly active users." },
-    { company: "Creative Labs", role: "Frontend Developer", period: "2020 - 2022", description: "Built responsive web platforms using React, Next.js, and Tailwind CSS for international client brands." }
-  ],
-  projects: [
-    { title: "SaaS Analytics Dashboard", description: "Real-time financial analytics portal for SaaS startup founders with custom data visualizer widgets.", github: "https://github.com", demo: "https://example.com" },
-    { title: "AI Copywriting Assistant", description: "Web app offering real-time AI-powered marketing copy suggestions using OpenAI API integration.", github: "https://github.com", demo: "https://example.com" }
-  ],
-  contact: { email: "sarah.jenkins@example.com", phone: "+1 (555) 019-2834", linkedin: "https://linkedin.com", github: "https://github.com", website: "https://example.com" }
+const TEMPLATE_NAMES = {
+  1: "Minimal Mono Canvas",
+  2: "Modern Tech Stack",
+  3: "Creative Studio Grid",
+  4: "Executive Lead Suite"
 };
 
 // ================= Helpers =================
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const safeUrl = (u) => (/^(https?:\/\/|data:image\/)/i.test(u || "") ? esc(u) : "");
-const initials = (n) => (n || "?").split(" ").filter(Boolean).map((w) => w[0]).join("").slice(0, 2).toUpperCase() || "?";
-const skillName = (s) => (typeof s === "string" ? s : s.name || "");
+
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[c]));
+
+const safeUrl = (u) =>
+  (/^(https?:\/\/|data:image\/)/i.test(u || "") ? esc(u) : "");
+
+const initials = (n) =>
+  (n || "?").split(" ").filter(Boolean).map((w) => w[0]).join("").slice(0, 2).toUpperCase() || "?";
+
+const skillName = (s) => (typeof s === "string" ? s : s?.name || "");
+
 const has = (a) => Array.isArray(a) && a.length > 0;
 
 function read(key, fallback) {
-  try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch (e) { return fallback; }
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value ?? fallback;
+  } catch (error) {
+    return fallback;
+  }
 }
 
+// ================= Load account data =================
 const currentUser = localStorage.getItem("currentUser");
-if (!currentUser) location.replace("Sign.html");
-const accountData = read("portfolio_" + currentUser, {personal:{}});
-if (!accountData || !accountData.personal) location.replace("createportfolio.html");
-function normalizeAccount(d) {
-  const p=d.personal||{}, c=d.socials||{};
-  return {name:p.name||"",jobTitle:p.title||"",location:p.location||"",about:p.bio||"",photo:p.photo||"",
-    skills:d.skills||[],experience:(d.positions||[]).map(x=>({role:x.job,company:x.company,period:x.years,description:x.desc})),
-    education:(d.education||[]).map(x=>({degree:x.degree,school:x.school,period:x.years})),
-    projects:(d.projects||[]).map(x=>({title:x.name,description:x.desc,github:x.github,demo:x.demo})),
-    contact:{email:p.email||"",phone:p.phone||"",linkedin:c.linkedin||"",github:c.github||"",website:c.website||""}};
+
+if (!currentUser) {
+  location.replace("Sign.html");
 }
+
+const accountData = read("portfolio_" + currentUser, { personal: {} });
+
+if (!accountData || !accountData.personal) {
+  location.replace("createportfolio.html");
+}
+
+function normalizeAccount(data) {
+  const personal = data.personal || {};
+  const socials = data.socials || {};
+
+  return {
+    name: personal.name || "",
+    jobTitle: personal.title || "",
+    location: personal.location || "",
+    about: personal.bio || "",
+    photo: personal.photo || "",
+    skills: Array.isArray(data.skills) ? data.skills : [],
+
+    experience: (data.positions || []).map((item) => ({
+      role: item.job,
+      company: item.company,
+      period: item.years,
+      description: item.desc
+    })),
+
+    education: (data.education || []).map((item) => ({
+      degree: item.degree,
+      school: item.school,
+      period: item.years
+    })),
+
+    projects: (data.projects || []).map((item) => ({
+      title: item.name,
+      description: item.desc,
+      github: item.github,
+      demo: item.demo
+    })),
+
+    contact: {
+      email: personal.email || "",
+      phone: personal.phone || "",
+      linkedin: socials.linkedin || "",
+      github: socials.github || "",
+      website: socials.website || ""
+    }
+  };
+}
+
 let info = normalizeAccount(accountData);
-localStorage.setItem(DATA_KEY, JSON.stringify({...info,templateId:accountData.templateId||1,published:true}));
+
+function saveCurrentPortfolioData() {
+  localStorage.setItem(
+    DATA_KEY,
+    JSON.stringify({
+      ...info,
+      templateId: accountData.templateId || 1,
+      published: true
+    })
+  );
+}
+
+saveCurrentPortfolioData();
+
 let saved = read(SAVED_KEY + "_" + currentUser, []);
 
-let toastTimer;
-function toast(msg) {
-  const el = $("toast");
-  el.textContent = msg;
-  el.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => (el.hidden = true), 2500);
-}
-
-// ================= 1) Profile =================
+// ================= Profile overview =================
 function renderProfile() {
-  const url = safeUrl(info.photo);
-  $("photoPreview").innerHTML = url ? `<img src="${url}" alt="">` : esc(initials(info.name));
-  $("profileName").textContent = info.name || "—";
+  const photoUrl = safeUrl(info.photo);
+  const contact = info.contact || {};
+
+  $("photoPreview").innerHTML = photoUrl
+    ? `<img src="${photoUrl}" alt="${esc(info.name || "Profile photo")}">`
+    : esc(initials(info.name));
+
+  $("profileName").textContent = info.name || "Your Name";
+  $("profileJobTitle").textContent = info.jobTitle || "Add your professional title";
+  $("profileLocation").textContent = info.location || "Location not added";
+  $("profileEmail").textContent = contact.email || "Email not added";
+
+  $("profileStatus").textContent = "Published";
+  $("memberSince").textContent = "New Member";
 }
 
-// ================= 2) Portfolio information (read only) =================
-const kv = (label, value, full = false) =>
-  `<div class="kv ${full ? "full" : ""}"><span>${label}</span><p>${value ? esc(value) : `<i class="dash-empty">—</i>`}</p></div>`;
+// ================= Statistics =================
+function renderStatistics() {
+  $("statSkills").textContent = info.skills.length;
+  $("statProjects").textContent = info.projects.length;
+  $("statExperience").textContent = info.experience.length;
+  $("statEducation").textContent = info.education.length;
+}
 
-const kvLink = (label, value, href) => {
+// ================= Profile completion =================
+function renderCompletion() {
+  const contact = info.contact || {};
+
+  const checks = [
+    { label: "Personal details", complete: Boolean(info.name && info.jobTitle && info.location) },
+    { label: "About section", complete: Boolean(info.about && info.about.trim()) },
+    { label: "Contact information", complete: Boolean(contact.email && contact.phone) },
+    { label: "Skills", complete: has(info.skills) },
+    { label: "Projects", complete: has(info.projects) },
+    { label: "Work experience", complete: has(info.experience) },
+    { label: "Education", complete: has(info.education) }
+  ];
+
+  const completedCount = checks.filter((item) => item.complete).length;
+  const percentage = Math.round((completedCount / checks.length) * 100);
+
+  $("completionPercent").textContent = `${percentage}%`;
+  $("completionBar").style.width = `${percentage}%`;
+  $("completionBar").setAttribute("aria-valuenow", percentage);
+  $("completionText").textContent =
+    percentage === 100
+      ? "Your portfolio profile is complete. Great work!"
+      : `${completedCount} of ${checks.length} sections completed. Add the missing details to strengthen your profile.`;
+
+  $("completionList").innerHTML = checks.map((item) => `
+    <div class="completion-item ${item.complete ? "is-complete" : ""}">
+      <span class="completion-check"><i class="fa-solid ${item.complete ? "fa-check" : "fa-plus"}"></i></span>
+      <span>${esc(item.label)}</span>
+      <span class="completion-state">${item.complete ? "Completed" : "Missing"}</span>
+    </div>
+  `).join("");
+}
+
+// ================= Portfolio information =================
+const kv = (label, value, full = false) =>
+  `<div class="kv ${full ? "full" : ""}">
+    <span>${esc(label)}</span>
+    <p>${value ? esc(value) : `<i class="dash-empty">Not added yet</i>`}</p>
+  </div>`;
+
+const kvLink = (label, value, href, external = false) => {
   const url = href || safeUrl(value);
-  return `<div class="kv"><span>${label}</span>${value
-    ? (url ? `<a href="${url}" target="_blank" rel="noopener">${esc(value)}</a>` : `<p>${esc(value)}</p>`)
-    : `<p><i class="dash-empty">—</i></p>`}</div>`;
+
+  return `<div class="kv">
+    <span>${esc(label)}</span>
+    ${value
+      ? (url
+        ? `<a href="${url}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ""}>${esc(value)}</a>`
+        : `<p>${esc(value)}</p>`)
+      : `<p><i class="dash-empty">Not added yet</i></p>`}
+  </div>`;
 };
 
-const none = `<p class="empty-note">Nothing added yet.</p>`;
-
 function renderInfo() {
-  const c = info.contact || {};
+  const contact = info.contact || {};
+  const visibleSkills = has(info.skills)
+    ? info.skills.slice(0, 8).map((skill) =>
+      `<span class="chip-item">${esc(skillName(skill))}</span>`
+    ).join("")
+    : `<p class="empty-note">No skills added yet. Add your skills to make your portfolio more informative.</p>`;
 
-  const experience = has(info.experience) ? info.experience.map((x) => `
-    <div class="entry">
-      <div class="entry-head"><b>${esc(x.role)}</b><span class="period">${esc(x.period)}</span></div>
-      <div class="entry-sub">${esc(x.company)}</div>
-      <p>${esc(x.description)}</p>
-    </div>`).join("") : none;
-
-  const education = has(info.education) ? info.education.map((x) => `
-    <div class="entry">
-      <div class="entry-head"><b>${esc(x.degree)}</b><span class="period">${esc(x.period || x.year)}</span></div>
-      <div class="entry-sub">${esc(x.school)}</div>
-    </div>`).join("") : none;
-
-  const projects = has(info.projects) ? info.projects.map((p) => `
-    <div class="entry">
-      <div class="entry-head"><b>${esc(p.title)}</b></div>
-      <p>${esc(p.description)}</p>
-      <div class="entry-links">
-        ${safeUrl(p.github) ? `<a href="${safeUrl(p.github)}" target="_blank" rel="noopener">GitHub</a>` : ""}
-        ${safeUrl(p.demo) ? `<a href="${safeUrl(p.demo)}" target="_blank" rel="noopener">Live Demo</a>` : ""}
-      </div>
-    </div>`).join("") : none;
+  const remainingSkills = info.skills.length > 8
+    ? `<span class="more-skills">+${info.skills.length - 8} more</span>`
+    : "";
 
   $("infoForm").innerHTML = `
-    <div class="block"><h3>About</h3>
-      <div class="grid2">${kv("Job Title", info.jobTitle)}${kv("Location", info.location)}${kv("About Me", info.about, true)}</div>
-    </div>
-
-    <div class="block"><h3>Contact &amp; Links</h3>
+    <div class="block">
+      <div class="block-heading">
+        <div>
+          <span class="block-kicker">01 / INTRODUCTION</span>
+          <h3>About</h3>
+        </div>
+      </div>
       <div class="grid2">
-        ${kvLink("Email", c.email, c.email ? `mailto:${esc(c.email)}` : "")}${kvLink("Phone", c.phone, c.phone ? `tel:${esc(c.phone)}` : "")}
-        ${kvLink("LinkedIn", c.linkedin)}${kvLink("GitHub", c.github)}${kvLink("Website", c.website)}
+        ${kv("Job Title", info.jobTitle)}
+        ${kv("Location", info.location)}
+        ${kv("About Me", info.about, true)}
       </div>
     </div>
 
-    <div class="block"><h3>Skills &amp; Technologies</h3>
-      <div class="chips">${has(info.skills) ? info.skills.map((s) => `<span class="chip-item">${esc(skillName(s))}</span>`).join("") : none}</div>
+    <div class="block">
+      <div class="block-heading">
+        <div>
+          <span class="block-kicker">02 / GET IN TOUCH</span>
+          <h3>Contact Information</h3>
+        </div>
+      </div>
+      <div class="grid2">
+        ${kvLink("Email", contact.email, contact.email ? `mailto:${esc(contact.email)}` : "")}
+        ${kvLink("Phone", contact.phone, contact.phone ? `tel:${esc(contact.phone)}` : "")}
+        ${kvLink("LinkedIn", contact.linkedin, "", true)}
+        ${kvLink("GitHub", contact.github, "", true)}
+        ${kvLink("Website", contact.website, "", true)}
+      </div>
     </div>
 
-    <div class="block"><h3>Work Experience</h3>${experience}</div>
-    <div class="block"><h3>Education</h3>${education}</div>
-    <div class="block"><h3>Projects</h3>${projects}</div>`;
+    <div class="block">
+      <div class="block-heading">
+        <div>
+          <span class="block-kicker">03 / WHAT I WORK WITH</span>
+          <h3>Skills &amp; Technologies</h3>
+        </div>
+        <span class="section-total">${info.skills.length} skills</span>
+      </div>
+      <div class="chips">${visibleSkills}${remainingSkills}</div>
+    </div>
+  `;
 }
 
-// ================= 3) Saved portfolios =================
+// ================= Saved portfolios =================
 function renderSaved() {
   $("savedCount").textContent = saved.length;
-  $("savedGrid").innerHTML = saved.length ? saved.map((s) => {
-    const date = new Date(s.savedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    return `
-    <article class="sp-card" tabindex="0" role="button" data-open="${esc(s.id)}" aria-label="Open ${esc(s.data.name)} in full screen">
-      <button class="sp-del" type="button" data-del="${esc(s.id)}" aria-label="Delete">✕</button>
-      <div class="thumb"><iframe src="portfolio.html?saved=${encodeURIComponent(s.id)}" loading="lazy" tabindex="-1" title=""></iframe></div>
-      <div class="sp-meta">
-        <b>${esc(s.data.name)}</b><span>${esc(s.data.jobTitle)}</span>
-        <div class="sp-foot"><em class="tpl-badge">${esc(TEMPLATE_NAMES[s.templateId] || "Template")}</em><small>${date}</small></div>
-      </div>
-    </article>`;
-  }).join("") : `<p class="empty-saved">No saved portfolios yet.<br>Press <b>Add New</b>, pick a template, then press <b>Save</b> on the portfolio page.</p>`;
+
+  $("savedGrid").innerHTML = saved.length
+    ? saved.map((portfolio) => {
+      const date = new Date(portfolio.savedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+
+      return `
+          <article class="sp-card"
+            tabindex="0"
+            role="button"
+            data-open="${esc(portfolio.id)}"
+            aria-label="Open ${esc(portfolio.data?.name || "saved portfolio")} in full screen">
+
+            <button class="sp-del"
+              type="button"
+              data-del="${esc(portfolio.id)}"
+              aria-label="Delete saved portfolio"><i class="fa-solid fa-trash-can"></i></button>
+
+            <div class="thumb">
+              <iframe
+                src="portfolio.html?saved=${encodeURIComponent(portfolio.id)}"
+                loading="lazy"
+                tabindex="-1"
+                title="Preview of ${esc(portfolio.data?.name || "saved portfolio")}">
+              </iframe>
+            </div>
+
+            <div class="sp-meta">
+              <b>${esc(portfolio.data?.name || "Untitled Portfolio")}</b>
+              <span>${esc(portfolio.data?.jobTitle || "No job title")}</span>
+
+              <div class="sp-foot">
+                <em class="tpl-badge">
+                  ${esc(TEMPLATE_NAMES[portfolio.templateId] || "Template")}
+                </em>
+                <small>${date}</small>
+              </div>
+            </div>
+          </article>
+        `;
+    }).join("")
+    : `<div class="empty-saved">
+        <div class="empty-saved-icon"><i class="fa-solid fa-folder-plus"></i></div>
+        <h3>No saved portfolios yet</h3>
+        <p>Create another design, choose a template, and save it to see it here.</p>
+        <a class="empty-saved-link" href="chooseTemplate.html">Create a portfolio</a>
+      </div>`;
 }
 
-// SweetAlert-style confirmation (custom, no library). Resolves true/false; stays open on "yes"
-function confirmDelete(s) {
+// ================= Delete confirmation =================
+function confirmDelete(portfolio) {
   return new Promise((resolve) => {
     const box = $("swal");
+
     $("swalIcon").className = "swal-icon warn";
-    $("swalIcon").textContent = "!";
+    $("swalIcon").innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
     $("swalTitle").textContent = "Delete this portfolio?";
-    $("swalText").innerHTML = `<b>${esc(s.data.name)}</b> · ${esc(TEMPLATE_NAMES[s.templateId] || "Template")}<br>You won’t be able to undo this.`;
+
+    $("swalText").innerHTML = `
+      <b>${esc(portfolio.data?.name || "Untitled Portfolio")}</b> ·
+      ${esc(TEMPLATE_NAMES[portfolio.templateId] || "Template")}
+      <br>You won’t be able to undo this.
+    `;
+
     $("swalActions").hidden = false;
     box.hidden = false;
     $("swalCancel").focus();
@@ -157,12 +325,21 @@ function confirmDelete(s) {
     const finish = (yes) => {
       document.removeEventListener("keydown", onKey);
       box.removeEventListener("click", onBackdrop);
-      $("swalOk").onclick = $("swalCancel").onclick = null;
+      $("swalOk").onclick = null;
+      $("swalCancel").onclick = null;
+
       if (!yes) box.hidden = true;
       resolve(yes);
     };
-    const onKey = (e) => { if (e.key === "Escape") finish(false); };
-    const onBackdrop = (e) => { if (e.target === box) finish(false); };
+
+    const onKey = (event) => {
+      if (event.key === "Escape") finish(false);
+    };
+
+    const onBackdrop = (event) => {
+      if (event.target === box) finish(false);
+    };
+
     document.addEventListener("keydown", onKey);
     box.addEventListener("click", onBackdrop);
     $("swalOk").onclick = () => finish(true);
@@ -172,64 +349,130 @@ function confirmDelete(s) {
 
 function showDeleted() {
   $("swalIcon").className = "swal-icon ok";
-  $("swalIcon").textContent = "✓";
+  $("swalIcon").innerHTML = `<i class="fa-solid fa-check"></i>`;
   $("swalTitle").textContent = "Deleted!";
   $("swalText").textContent = "Your saved portfolio has been removed.";
   $("swalActions").hidden = true;
-  setTimeout(() => { $("swal").hidden = true; }, 1300);
+
+  setTimeout(() => {
+    $("swal").hidden = true;
+  }, 1300);
 }
 
-$("savedGrid").addEventListener("click", async (e) => {
-  const del = e.target.closest("[data-del]");
-  if (del) {
-    e.stopPropagation();
-    const s = saved.find((x) => x.id === del.dataset.del);
-    if (!s || !(await confirmDelete(s))) return;
-    saved = saved.filter((x) => x.id !== s.id);
-    localStorage.setItem(SAVED_KEY + "_" + currentUser, JSON.stringify(saved));
+// ================= Saved portfolio events =================
+$("savedGrid").addEventListener("click", async (event) => {
+  const deleteButton = event.target.closest("[data-del]");
+
+  if (deleteButton) {
+    event.stopPropagation();
+
+    const portfolio = saved.find((item) => item.id === deleteButton.dataset.del);
+
+    if (!portfolio || !(await confirmDelete(portfolio))) return;
+
+    saved = saved.filter((item) => item.id !== portfolio.id);
+
+    localStorage.setItem(
+      SAVED_KEY + "_" + currentUser,
+      JSON.stringify(saved)
+    );
+
     renderSaved();
     showDeleted();
     return;
   }
-  const card = e.target.closest("[data-open]");
+
+  const card = event.target.closest("[data-open]");
   if (card) openFull(card.dataset.open);
 });
-$("savedGrid").addEventListener("keydown", (e) => {
-  const card = e.target.closest("[data-open]");
-  if (card && e.target === card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openFull(card.dataset.open); }
+
+$("savedGrid").addEventListener("keydown", (event) => {
+  const card = event.target.closest("[data-open]");
+
+  if (card && event.target === card &&
+    (event.key === "Enter" || event.key === " ")) {
+    event.preventDefault();
+    openFull(card.dataset.open);
+  }
 });
 
-// Full screen viewer: the portfolio keeps its own template theme inside the frame
+// ================= Full screen viewer =================
 function openFull(id) {
-  const s = saved.find((x) => x.id === id);
-  if (!s) return;
-  $("fsTitle").textContent = s.data.name;
-  $("fsSub").textContent = TEMPLATE_NAMES[s.templateId] || "";
+  const portfolio = saved.find((item) => item.id === id);
+  if (!portfolio) return;
+
+  $("fsTitle").textContent = portfolio.data?.name || "Saved Portfolio";
+  $("fsSub").textContent = TEMPLATE_NAMES[portfolio.templateId] || "";
   $("fsFrame").src = `portfolio.html?saved=${encodeURIComponent(id)}`;
   $("fs").hidden = false;
   document.body.style.overflow = "hidden";
 }
+
 function closeFull() {
   $("fs").hidden = true;
   $("fsFrame").src = "about:blank";
   document.body.style.overflow = "";
 }
-$("fsClose").addEventListener("click", closeFull);
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("fs").hidden) closeFull(); });
 
-// ================= Keep the page in sync =================
-// When the editor (or the Save button) changes the data in another tab, refresh what's shown.
+$("fsClose").addEventListener("click", closeFull);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !$("fs").hidden) closeFull();
+});
+
+// ================= Keep page in sync =================
 function refresh() {
-  const latestInfo = normalizeAccount(read("portfolio_" + currentUser, accountData));
-  if (JSON.stringify(latestInfo) !== JSON.stringify(info)) { info = latestInfo; renderProfile(); renderInfo(); }
+  const latestAccount = read("portfolio_" + currentUser, accountData);
+  const latestInfo = normalizeAccount(latestAccount);
+
+  if (JSON.stringify(latestInfo) !== JSON.stringify(info)) {
+    info = latestInfo;
+    renderProfile();
+    renderStatistics();
+    renderCompletion();
+    renderInfo();
+    renderNav();
+    saveCurrentPortfolioData();
+  }
+
   const latestSaved = read(SAVED_KEY + "_" + currentUser, []);
-  if (JSON.stringify(latestSaved) !== JSON.stringify(saved)) { saved = latestSaved; renderSaved(); }
+
+  if (JSON.stringify(latestSaved) !== JSON.stringify(saved)) {
+    saved = latestSaved;
+    renderSaved();
+  }
 }
+
 window.addEventListener("storage", refresh);
 window.addEventListener("focus", refresh);
 
+// ================= Navbar user =================
+const users = read("users", []);
+const account = users.find((u) => u.email === currentUser) || {};
 
+function renderNav() {
+  $("navUserName").textContent = info.name || account.name || "Guest User";
+  $("navUserEmail").textContent = currentUser;
 
+  const avatar = $("navAvatar");
+  if (info.photo) {
+    avatar.innerHTML = `<img src="${safeUrl(info.photo)}" alt="avatar">`;
+  } else {
+    avatar.textContent = initials(info.name || account.name);
+  }
+}
+
+$("navLogout").addEventListener("click", () => {
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("rememberedUser");
+  sessionStorage.removeItem("sessionActive");
+  location.href = "Sign.html";
+});
+
+// ================= Initial rendering =================
 renderProfile();
+renderStatistics();
+renderCompletion();
 renderInfo();
 renderSaved();
+renderNav();

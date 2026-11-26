@@ -66,3 +66,60 @@ mockTabs.forEach(function (tab) {
     });
   });
 });
+
+// ================= Home navbar: logged-in state =================
+(function () {
+  const currentUser = localStorage.getItem("currentUser");
+  const remembered = localStorage.getItem("rememberedUser");
+  const sessionActive = sessionStorage.getItem("sessionActive");
+
+  if (!currentUser || (!remembered && !sessionActive)) return;
+
+  const navRight = document.querySelector(".nav .nav-right");
+  if (!navRight) return;
+
+  let users = [];
+  try { users = JSON.parse(localStorage.getItem("users")) || []; } catch {}
+  const account = users.find((u) => u.email === currentUser) || {};
+
+  let portfolio = null;
+  try { portfolio = JSON.parse(localStorage.getItem("portfolio_" + currentUser)); } catch {}
+
+  navRight.innerHTML = `
+    <a href="./personalInfo.html" class="signin btn-outline btn">
+      ${portfolio?.personal?.name || account.name || "Dashboard"}
+    </a>
+    <button id="home-logout" class="btn btn-primary" type="button">Sign Out</button>
+  `;
+
+  document.getElementById("home-logout").addEventListener("click", function () {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("rememberedUser");
+    sessionStorage.removeItem("sessionActive");
+    location.reload();
+  });
+})();
+
+// ================= Hero counter animation =================
+document.querySelectorAll(".stats .stat b").forEach((el) => {
+  const text = el.textContent.trim();
+  const match = text.match(/^([\d,\.]+)(.*)$/);
+  if (!match) return;
+
+  const target = parseFloat(match[1].replace(/,/g, ""));
+  const suffix = match[2] || "";
+  const duration = 1200;
+  const start = performance.now();
+
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = target * eased;
+    el.textContent =
+      (match[1].includes(",")
+        ? Math.round(val).toLocaleString()
+        : (Number.isInteger(target) ? Math.round(val) : val.toFixed(1))) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+});

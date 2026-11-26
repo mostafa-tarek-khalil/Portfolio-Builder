@@ -11,7 +11,7 @@ grid.innerHTML = TEMPLATES.map(t => `
   <article class="tpl-card">
     <div class="tpl-img"><img src="${t.image}" alt="${t.name} preview" loading="lazy"></div>
     <div class="tpl-info"><h3>${t.name}</h3>
-      <button class="btn btn-purple use-template" type="button" data-id="${t.id}">Use Template →</button>
+      <button class="btn btn-purple use-template" type="button" data-id="${t.id}"><i class="fa-solid fa-wand-magic-sparkles"></i> Use Template</button>
     </div>
   </article>`).join("");
 grid.addEventListener("click", e => {
