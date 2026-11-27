@@ -6,7 +6,7 @@ const forgotLink = document.getElementById("forgot");
 const password = document.getElementById("password");
 const eyeBtn = document.getElementById("toggle-eye");
 const form = document.getElementById("auth-form");
-
+const API_URL = "http://localhost:3000";
 //Sign In / Create Account
 tabSignup.addEventListener("click", function () {
   tabSignup.classList.add("active");
@@ -55,15 +55,15 @@ function handleRemember(email) {
 // Some browsers/extensions block location changes inside event handlers;
 // this tries several methods and falls back until one works.
 function goTo(path) {
-  try { window.location.assign(path); } catch (e) {}
+  try { window.location.assign(path); } catch (e) { }
   setTimeout(() => {
     if (!document.hidden) {
-      try { window.location.href = path; } catch (e) {}
+      try { window.location.href = path; } catch (e) { }
     }
   }, 80);
 }
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const email = document.getElementById("email").value.trim();
@@ -72,38 +72,107 @@ form.addEventListener("submit", function (event) {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
 
+
   if (isSignup) {
     const name = document.getElementById("name").value.trim();
 
-    const exists = users.some(function (u) {
-      return u.email === email;
-    });
-    if (exists) {
-      // Instead of a dead-end alert: switch to Sign In tab, prefill the email
-      // and tell the user to enter their password.
-      tabSignin.click();
-      document.getElementById("email").value = email;
-      password.focus();
-      showToast("This email is already registered — enter your password to sign in.");
+    if (!name) {
+      showToast("Please enter your full name.");
       return;
     }
 
-    users.push({ name: name, email: email, password: pass });
-    localStorage.setItem("users", JSON.stringify(users));
-    handleRemember(email);
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating Account...";
 
-    goTo("createportfolio.html");
+      const response = await fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: pass
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showToast(data.message);
+        return;
+      }
+
+      showToast(data.message, true);
+
+      tabSignin.click();
+      document.getElementById("email").value = email;
+      password.value = "";
+
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to connect to server.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Create Account";
+    }
   } else {
-    const user = users.find(function (u) {
-      return u.email === email && u.password === pass;
-    });
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Signing In...";
 
-    if (user) {
-      handleRemember(email);
-      // has a saved portfolio → edit it, otherwise → build it
-      goTo(localStorage.getItem("portfolio_" + email) ? "personalInfo.html" : "createportfolio.html");
-    } else {
-      showToast("Wrong email or password.");
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: pass
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showToast(data.message || "Login failed.");
+        return;
+      }
+
+      // Save the user's email using the existing mechanism
+      handleRemember(data.user.email);
+
+      // Remove any old token
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+
+      // Save JWT according to Remember Me
+      if (rememberBox.checked) {
+        localStorage.setItem("token", data.token);
+      } else {
+        sessionStorage.setItem("token", data.token);
+      }
+
+      showToast(data.message, true);
+
+      // Navigate according to whether the user has a saved portfolio
+      const hasPortfolio = Boolean(
+        localStorage.getItem("portfolio_" + data.user.email)
+      );
+
+      goTo(
+        hasPortfolio
+          ? "personalInfo.html"
+          : "createportfolio.html"
+      );
+
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to connect to server.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Sign In";
     }
   }
 });
@@ -182,8 +251,8 @@ function openAccountPicker(provider) {
       </div>
       <div class="picker-list">
         ${DEMO_ACCOUNTS[provider].map((acc) => {
-          const hasPortfolio = Boolean(localStorage.getItem("portfolio_" + acc.email));
-          return `<button class="picker-item" data-email="${acc.email}">
+    const hasPortfolio = Boolean(localStorage.getItem("portfolio_" + acc.email));
+    return `<button class="picker-item" data-email="${acc.email}">
             <span class="picker-avatar" style="background:${acc.color}">${acc.avatar}</span>
             <span class="picker-info">
               <b>${acc.name}</b>
@@ -191,7 +260,7 @@ function openAccountPicker(provider) {
             </span>
             <span class="picker-state">${hasPortfolio ? "Existing portfolio" : "New here"}</span>
           </button>`;
-        }).join("")}
+  }).join("")}
         <button class="picker-item picker-other">
           <span class="picker-avatar other"><i class="fa-solid fa-user-plus"></i></span>
           <span class="picker-info">
@@ -257,12 +326,12 @@ if (rememberedEmail) {
 // NOTE: this cleanup runs only when the Sign page loads with a stale session —
 // it must not run right after a social/picker login in the same tab (handled via sessionActive flag).
 if (localStorage.getItem("currentUser") && !rememberedEmail &&
-    !sessionStorage.getItem("sessionActive") && !params.get("social")) {
+  !sessionStorage.getItem("sessionActive") && !params.get("social")) {
   // Give pending social/picker logins (which set sessionActive in the same tick) a chance
   // — only clear when there is truly no active session.
   setTimeout(() => {
     if (localStorage.getItem("currentUser") && !localStorage.getItem("rememberedUser") &&
-        !sessionStorage.getItem("sessionActive")) {
+      !sessionStorage.getItem("sessionActive")) {
       localStorage.removeItem("currentUser");
     }
   }, 0);
