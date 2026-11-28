@@ -46,7 +46,7 @@ const links = [
 
 $("aiLinks").innerHTML = links.map((l) => {
   const href = l.href || (/^https?:\/\//i.test(l.value || "") ? esc(l.value) : "");
-  return `<a class="link-card ${l.value ? "" : "empty"}" ${href ? `href="${href}" target="_blank" rel="noopener" style="overflow: hidden;"` : ""}>
+  return `<a class="link-card ${l.value ? "" : "empty"}" ${href ? `href="${href}" target="_blank" rel="noopener" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"` : ""}>
       <span class="link-icon"><i class="${l.icon}"></i></span>
       <span>
         <em>${esc(l.label)}</em>
